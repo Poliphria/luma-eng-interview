@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const port = 3000;
 const { dbConnect } = require('./helpers/db');
 
+const doctorRoutes = require('./routes/doctors')
+
 app.disable('x-powered-by');
 
 dbConnect();
@@ -17,9 +19,7 @@ dbConnect();
 app.use(logger('dev'));
 app.use(bodyParser.json()); 
 
-app.get('/', (req, res) => {
-    res.json({msg: "hello world"});
-})
+app.use('/doctors', doctorRoutes)
 
 app.use((err, req, res, next) => {
     console.log(err.stack);

@@ -31,7 +31,7 @@ module.exports.findDoctorById = (req, res) => {
 }
 
 
-module.doctors.deleteDoctor = (req, res) => {
+module.exports.deleteDoctor = (req, res) => {
         const doctorId = req.params.id;
 
         Appointment.deleteMany({ _id: doctorId })
@@ -42,6 +42,15 @@ module.doctors.deleteDoctor = (req, res) => {
                         res.status(200).json(result);
                 })
                 .catch(err => next(err));
+        })
+        .catch(err => next(err));
+}
+
+module.exports.updateDoctor = (req, res) => {
+        Doctor.findOneAndUpdate({_id: req.params.id}, req.body, {runValidators: true})
+        .then(result => {
+                console.log(result);
+                res.status(200).json(result);
         })
         .catch(err => next(err));
 }
