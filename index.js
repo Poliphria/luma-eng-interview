@@ -5,28 +5,17 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const port = 3000;
+const { dbConnect } = require('./helpers/db');
 
 app.disable('x-powered-by');
 
-/**
- * Connect to the MongoDB db called luma-health
- */
-mongoose.connect("mongodb+srv://poliphria:luma-health@luma-booking-api-a3jcx.mongodb.net/test?retryWrites=true", { useNewUrlParser: true })
-    .then(() => { console.log('Connection to MongoDB successful.')} )
-    .catch((err) => { console.error(err) });
+dbConnect();
 
 /**
  * Middleware used for parsing request body and for logging
  */
 app.use(logger('dev'));
-app.use(bodyParser.json());
-
-/**
- * Only use errorhandler if in development environment. Not ready for production.
- */
-if (process.env.NODE_ENV === 'development') {
-    app.use(errorhandler());
-}
+app.use(bodyParser.json()); 
 
 app.get('/', (req, res) => {
     res.json({msg: "hello world"});
