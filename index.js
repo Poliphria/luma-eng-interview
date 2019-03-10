@@ -21,6 +21,11 @@ app.get('/', (req, res) => {
     res.json({msg: "hello world"});
 })
 
+app.use((err, req, res, next) => {
+    console.log(err.stack);
+    res.status(500).send({error: err});
+})
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
