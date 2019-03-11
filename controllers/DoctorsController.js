@@ -8,7 +8,9 @@ module.exports.createDoctor = (req, res) => {
 
         // make call to db to add doctor
         newDoctor.save((err, doc) => {
-                if (err) return console.error(err);
+                if (err) {
+                        return console.error(err);
+                } 
                 console.log("New doctor saved", doc);
                 res.json(doc);
         })
@@ -31,24 +33,27 @@ module.exports.findDoctorById = (req, res) => {
 }
 
 
-module.exports.deleteDoctor = (req, res) => {
+module.exports.deleteDoctor = (req, res, next) => {
         const doctorId = req.params.id;
 
         Appointment.deleteMany({ _id: doctorId })
-        .then(() => {
+        .then((err) => {
                 if (err) return console.error(err);
-                Doctor.findByIdAndRemove( {_id: doctorId } )
+                console.log('Appointments deleted');
+        })
+        .catch(err => next(err));
+
+        Doctor.findOneAndDelete({_id: doctorId})
                 .then(result => {
                         res.status(200).json(result);
                 })
                 .catch(err => next(err));
-        })
-        .catch(err => next(err));
 }
 
 module.exports.updateDoctor = (req, res) => {
-        Doctor.findOneAndUpdate({_id: req.params.id}, req.body, {runValidators: true})
+        Doctor.findByIdAndUpdate(req.params.id, req.body, {runValidators: true, new: true})
         .then(result => {
+                console.log('updated')
                 console.log(result);
                 res.status(200).json(result);
         })
