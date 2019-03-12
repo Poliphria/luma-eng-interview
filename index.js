@@ -5,9 +5,9 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const port = 3000;
-const { dbConnect } = require('./helpers/db');
+const { dbConnect } = require('./api/helpers/db');
 
-const doctorRoutes = require('./routes/doctors')
+const doctorRoutes = require('./api/routes/doctors')
 
 app.disable('x-powered-by');
 
