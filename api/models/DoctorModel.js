@@ -7,10 +7,6 @@ const doctorSchema = new Schema({
     lastName: {type: String, required: true},
     phoneNumber: {type: String, required: true},
     specialization: { type: String },
-    patientsSeen: [{
-        patient: {type: Schema.Types.ObjectId, ref: 'Patient'},
-        appointment: {type: Schema.Types.ObjectId, ref: 'Appointment'}
-    }],
     workingHoursByDay: [{
         day: { type: String, required: true},
         hours: {

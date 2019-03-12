@@ -8,6 +8,7 @@ const port = 3000;
 const { dbConnect } = require('./api/helpers/db');
 
 const doctorRoutes = require('./api/routes/doctors')
+const patientRoutes = require('./api/routes/patients');
 
 app.disable('x-powered-by');
 
@@ -20,6 +21,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json()); 
 
 app.use('/doctors', doctorRoutes)
+app.use('/patients', patientRoutes)
 
 app.use((err, req, res, next) => {
     console.log(err.stack);

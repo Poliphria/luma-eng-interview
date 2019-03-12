@@ -12,8 +12,9 @@ const patientSchema = new Schema({
         state: {type: String},
         zip: {type: String}
     },
+    ssn: {type: String, required: true},
     phoneNumber: { type: String, required: true },
-    email: { type: string },
+    email: { type: String },
     createdAt: { type: Date, default: Date.now },
 });
 
