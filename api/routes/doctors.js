@@ -13,7 +13,7 @@ router.get('/', doctorController.getAllDoctors);
 router.get('/:id', doctorController.findDoctorById);
 
 // POST request for creating a Doctor
-router.post('/create', doctorController.createDoctor);
+router.post('/', doctorController.createDoctor);
 
 // POST request for deleting a Doctor
 router.post('/:id/delete', doctorController.deleteDoctor);
