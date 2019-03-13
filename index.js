@@ -7,22 +7,26 @@ const mongoose = require('mongoose');
 const port = 3000;
 const { dbConnect } = require('./api/helpers/db');
 
-const doctorRoutes = require('./api/routes/doctors')
+// require routes
+const doctorRoutes = require('./api/routes/doctors');
 const patientRoutes = require('./api/routes/patients');
+const appointmentRoutes = require('./api/routes/appointments');
 
 app.disable('x-powered-by');
 
+// Connect to the cloud database
 dbConnect();
 
-/**
- * Middleware used for parsing request body and for logging
- */
+// Middleware used for parsing request body and for logging
 app.use(logger('dev'));
 app.use(bodyParser.json()); 
 
+// routes
 app.use('/doctors', doctorRoutes)
 app.use('/patients', patientRoutes)
+app.use('/appointments', appointmentRoutes)
 
+// error handler
 app.use((err, req, res, next) => {
     console.log(err.stack);
     res.status(500).send({error: err});
