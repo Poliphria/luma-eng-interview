@@ -13,7 +13,7 @@ module.exports.createPatient = (req, res, next) => {
         newPatient.save((err, doc) => {
             if (err) {
                 console.error(err);
-                next(err);
+                next(err.message);
             }
 
             console.log('New doctor saved', doc);

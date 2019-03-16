@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const port = 3000;
 const { dbConnect } = require('./api/helpers/db');
 
+
 // require routes
 const doctorRoutes = require('./api/routes/doctors');
 const patientRoutes = require('./api/routes/patients');
@@ -18,8 +19,13 @@ app.disable('x-powered-by');
 dbConnect();
 
 // Middleware used for parsing request body and for logging
-app.use(logger('dev'));
 app.use(bodyParser.json()); 
+
+//don't show the log when it is test
+if(process.env.NODE_ENV !== 'test') {
+    //use morgan to log at command line
+    app.use(logger('combined'));
+}
 
 // routes
 app.use('/doctors', doctorRoutes)
@@ -35,4 +41,6 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
+
+module.exports = app;
 
