@@ -12,12 +12,12 @@ module.exports.createPatient = (req, res, next) => {
         if (response.length > 0) return res.status(200).json({msg: 'User already exists'})
         newPatient.save((err, doc) => {
             if (err) {
-                console.error(err);
-                next(err.message);
+                //console.error(err);
+                next(err);
+            } else {
+                // console.log('New patient created:\n', doc);
+                res.send({msg: 'new patient created', ...doc._doc });
             }
-
-            console.log('New doctor saved', doc);
-            res.json(doc);
         })
     })
 }
@@ -65,7 +65,7 @@ module.exports.updatePatient = (req, res, next) => {
     Patient.findOneAndUpdate({_id: req.params.id}, {$set: req.body}, {runValidators: true, new: true}).exec()
     .then(response => {
         console.log('Patient updated', response);
-        res.json(response);
+        res.send({msg: 'Patient successfully update', response});
     })
     .catch(err => next(err));
 };

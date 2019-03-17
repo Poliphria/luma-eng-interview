@@ -34,8 +34,8 @@ app.use('/appointments', appointmentRoutes)
 
 // error handler
 app.use((err, req, res, next) => {
-    console.log(err.stack);
-    res.status(500).send({error: err});
+    //console.log(err.stack);
+    res.send(err);
 })
 
 app.listen(port, () => {
