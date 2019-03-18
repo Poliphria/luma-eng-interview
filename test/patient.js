@@ -21,17 +21,23 @@ before((done) => {
         .then(() => {
             let uri = process.env.MATLAS_URI;
             mongoose.connect(uri, { useNewUrlParser: true }, (err) => {
-                done(err);
+                if (err) return console.error(err);
+                done();
             });
-            mockgoose.helper.reset()
         })
-        .then(() => {
-            console.log('Connection to mock db established. Db has been reset.');
-        })
+        
 });
 
 // Tests for patient functions
 describe('Patients', () => {
+    // Reset the db before every test
+    beforeEach((done) => {
+        mockgoose.helper.reset()
+        .then(() => {
+            done();
+        })
+    })
+
     /**
      * Test the POST route
      */
@@ -46,6 +52,7 @@ describe('Patients', () => {
                 .post('/patients')
                 .send(newPatient)
                 .end((err, res) => {
+                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('errors');
@@ -99,19 +106,19 @@ describe('Patients', () => {
     /**
     * Test the GET route
     */
-   describe('GET /patients', () => {
-    it('it should GET all the patients', (done) => {
-        chai.request(server)
-            .get('/patients')
-            .end((err, res) => {
-                if (err) console.error(err);
-                res.should.have.status(200);
-                res.body.should.be.a('array');
-                res.body.length.should.be.eql(1);
-            })
-        done();
+    describe('GET /patients', () => {
+        it('it should GET all the patients', (done) => {
+            chai.request(server)
+                .get('/patients')
+                .end((err, res) => {
+                    if (err) console.error(err);
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    res.body.length.should.be.eql(0);
+                })
+            done();
+        })
     })
-})
 
     /**
      * Test the GET /patients/:id route
@@ -141,18 +148,32 @@ describe('Patients', () => {
     });
 
     /**
-     * Test the PUT '/patients/:id route
+     * Test the PUT '/patients/:id' route
      */
     describe('PUT /patients/:id', () => {
         it('it should update a patient by the given id', (done) => {
-            let patient = new Patient({ firstName: "Tyler", lastName: "Steincamp", ssn: "789456", phoneNumber: "6784691088"});
+            // create patient to update 
+            let patient = new Patient({ firstName: "Tyler", lastName: "Steincamp", ssn: "789456", phoneNumber: "6784691088" });
             patient._id = new mongoose.Types.ObjectId();
             patient.save((err, patient) => {
                 chai.request(server)
-                .put('/patients/'+ patient._id);
-                .send({firstName: "George"})
-            })
-        })
-    })
+                    .put('/patients/' + patient._id + '/update')
+                    .send({ firstName: "George" }) // send a property to be changed
+                    .end((err, res) => {
+                        console.log(res.body);
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('msg');
+                        res.body.should.have.property('response');
+                        res.body.response.should.be.a('object');
+                    });
+                done();
+            });
+        });
+    });
+
+    /**
+     * Test the DELETE '/patients/:id' route
+     */
 })
 

@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 //don't show the log when it is test
 if(process.env.NODE_ENV !== 'test') {
     //use morgan to log at command line
-    app.use(logger('combined'));
+    app.use(logger('dev'));
 }
 
 // routes
