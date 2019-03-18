@@ -25,7 +25,7 @@ before((done) => {
                 done();
             });
         })
-        
+
 });
 
 // Tests for patient functions
@@ -33,9 +33,9 @@ describe('Patients', () => {
     // Reset the db before every test
     beforeEach((done) => {
         mockgoose.helper.reset()
-        .then(() => {
-            done();
-        })
+            .then(() => {
+                done();
+            })
     })
 
     /**
@@ -52,8 +52,7 @@ describe('Patients', () => {
                 .post('/patients')
                 .send(newPatient)
                 .end((err, res) => {
-                    console.log(res.body);
-                    res.should.have.status(200);
+                    res.should.have.status(404);
                     res.body.should.be.a('object');
                     res.body.should.have.property('errors');
                     res.body.errors.should.have.property('ssn');
@@ -95,7 +94,7 @@ describe('Patients', () => {
                 .post('/patients')
                 .send(newPatient)
                 .end((err, res) => {
-                    res.should.have.status(200);
+                    res.should.have.status(422);
                     res.body.should.be.a('object');
                     res.body.should.have.property('msg').eql('User already exists');
                 });
@@ -160,6 +159,7 @@ describe('Patients', () => {
                     .put('/patients/' + patient._id)
                     .send({ firstName: "George" }) // send a property to be changed
                     .end((err, res) => {
+                        if (err) return console.error(err);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('msg');
@@ -174,5 +174,40 @@ describe('Patients', () => {
     /**
      * Test the DELETE '/patients/:id' route
      */
+    describe('DELETE /patients/:id', () => {
+        it('it should delete a patient by the given id', (done) => {
+            let newPatient = new Patient({
+                firstName: "Donnie",
+                lastName: "Darko",
+                ssn: "67856",
+                phoneNumber: "34343"
+            })
+
+            newPatient._id = new mongoose.Types.ObjectId();
+            newPatient.save((err, res) => {
+                if (err) return console.error(err);
+                chai.request(server)
+                    .delete('/patients/' + newPatient._id)
+                    .end((err, res) => {
+                        if (err) console.error(err);
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('msg').eql('patient and associated appointments have been deleted');
+                    });
+                done();
+            });
+        });
+
+        it('it should not delete a patient because id does not exist', (done) => {
+            chai.request(server)
+                .delete('/patients/e321325feds')
+                .end((err, res) => {
+                    if (err) return console.error(err);
+                    res.should.have.status(404);
+                    res.body.should.have.property('name').eql("CastError");
+                })
+                done();
+        })
+    });
 })
 

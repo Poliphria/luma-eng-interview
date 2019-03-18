@@ -9,7 +9,7 @@ module.exports.createPatient = (req, res, next) => {
 
     Patient.find({ ssn: newPatient.ssn }).exec()
     .then(response => {
-        if (response.length > 0) return res.status(200).json({msg: 'User already exists'})
+        if (response.length > 0) return res.status(422).json({msg: 'User already exists'})
         newPatient.save((err, doc) => {
             if (err) {
                 //console.error(err);
@@ -47,15 +47,15 @@ module.exports.removePatient = (req, res, next) => {
     // remove all appointments where this patient shows up 
     Appointment.deleteMany({ patient: patientID }).exec()
     .then(response => {
-        console.log(response);
+        // console.log(response);
     })
     .catch(err => next(err));
 
     // remove all instances of patient in db
     Patient.findByIdAndDelete(patientID).exec()
     .then(response => {
-        console.log(response);
-        return res.status(204).json({msg: "patient and associated appointments have been deleted"});
+        // console.log(response);
+        return res.status(200).json({msg: "patient and associated appointments have been deleted"});
     })
     .catch(err => next(err));
 };
