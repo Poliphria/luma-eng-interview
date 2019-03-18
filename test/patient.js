@@ -157,10 +157,9 @@ describe('Patients', () => {
             patient._id = new mongoose.Types.ObjectId();
             patient.save((err, patient) => {
                 chai.request(server)
-                    .put('/patients/' + patient._id + '/update')
+                    .put('/patients/' + patient._id)
                     .send({ firstName: "George" }) // send a property to be changed
                     .end((err, res) => {
-                        console.log(res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('msg');

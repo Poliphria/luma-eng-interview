@@ -10,10 +10,10 @@ router.get('/', patientController.getPatients);
 router.post('/', patientController.createPatient);
 
 //PUT request to update a patient's information
-router.put('/:id/update', patientController.updatePatient);
+router.put('/:id', patientController.updatePatient);
 
 // POST request to remove a patient
-router.post('/:id/delete', patientController.removePatient);
+router.delete('/:id', patientController.removePatient);
 
 // GET request to get one patient
 router.get('/:id', patientController.findPatientById);
