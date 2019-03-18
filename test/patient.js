@@ -15,7 +15,7 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-// Connect to the database and then empty contents of db on startup
+// Connect to the mock database
 before((done) => {
     mockgoose.prepareStorage()
         .then(() => {

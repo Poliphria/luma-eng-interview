@@ -11,7 +11,7 @@ module.exports.createDoctor = (req, res) => {
                 if (err) {
                         return console.error(err);
                 } 
-                console.log("New doctor saved", doc);
+                // console.log("New doctor saved", doc);
                 res.json(doc);
         })
 }
