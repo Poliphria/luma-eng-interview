@@ -15,8 +15,8 @@ router.get('/:id', doctorController.findDoctorById);
 // POST request for creating a Doctor
 router.post('/', doctorController.createDoctor);
 
-// POST request for deleting a Doctor
-router.post('/:id', doctorController.deleteDoctor);
+// DELETE request for deleting a Doctor
+router.delete('/:id', doctorController.deleteDoctor);
 
 // PUT request for updating a Doctor
 router.put('/:id', doctorController.updateDoctor);

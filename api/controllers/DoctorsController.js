@@ -49,7 +49,7 @@ module.exports.deleteDoctor = (req, res, next) => {
 
         Doctor.findOneAndDelete({_id: doctorId})
                 .then(result => {
-                        res.status(200).json(result);
+                        return res.status(200).json({ msg: 'doctor and associated appointments have been deleted'});
                 })
                 .catch(err => next(err));
 }

@@ -65,7 +65,7 @@ module.exports.updatePatient = (req, res, next) => {
     Patient.findOneAndUpdate({_id: req.params.id}, {$set: req.body}, {runValidators: true, new: true, useFindAndModify: false}).exec()
     .then(response => {
       //  console.log('Patient updated', response);
-        res.send({msg: 'Patient successfully update', response});
+        res.send({msg: 'Patient successfully updated', response});
     })
     .catch(err => next(err));
 };

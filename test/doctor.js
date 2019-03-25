@@ -188,5 +188,41 @@ describe('Doctors', () => {
         });
     });
 
-    
+    /**
+     * Test the DELETE '/doctors/:id' route
+     */
+    describe('DELETE /doctors/:id', () => {
+        it('it should delete a doctor by the given id', (done) => {
+            let newDoctor = new Doctor({
+                firstName: "Donnie",
+                lastName: "Darko",
+                phoneNumber: "34343"
+            })
+
+            newDoctor._id = new mongoose.Types.ObjectId();
+            newDoctor.save((err, res) => {
+                if (err) return console.error(err);
+                chai.request(server)
+                    .delete('/doctors/' + newDoctor._id)
+                    .end((err, res) => {
+                        if (err) console.error(err);
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('msg').eql('doctor and associated appointments have been deleted');
+                    });
+                done();
+            });
+        });
+
+        it('it should not delete a patient because id does not exist', (done) => {
+            chai.request(server)
+                .delete('/doctors/e321325feds')
+                .end((err, res) => {
+                    if (err) return console.error(err);
+                    res.should.have.status(404);
+                    res.body.should.have.property('name').eql("CastError");
+                })
+                done();
+        })
+    });
 });
