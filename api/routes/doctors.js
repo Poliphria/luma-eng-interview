@@ -16,9 +16,9 @@ router.get('/:id', doctorController.findDoctorById);
 router.post('/', doctorController.createDoctor);
 
 // POST request for deleting a Doctor
-router.post('/:id/delete', doctorController.deleteDoctor);
+router.post('/:id', doctorController.deleteDoctor);
 
 // PUT request for updating a Doctor
-router.put('/:id/update', doctorController.updateDoctor);
+router.put('/:id', doctorController.updateDoctor);
 
 module.exports = router;

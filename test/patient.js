@@ -155,6 +155,7 @@ describe('Patients', () => {
             let patient = new Patient({ firstName: "Tyler", lastName: "Steincamp", ssn: "789456", phoneNumber: "6784691088" });
             patient._id = new mongoose.Types.ObjectId();
             patient.save((err, patient) => {
+                if (err) return console.error(err);
                 chai.request(server)
                     .put('/patients/' + patient._id)
                     .send({ firstName: "George" }) // send a property to be changed

@@ -162,5 +162,31 @@ describe('Doctors', () => {
         });
     });
 
+    /**
+     * Test PUT route for doctor with the provided id
+     */
+    describe('PUT /patients/:id', () => {
+        it('it should update a doctor by the given id', (done) => {
+            // create doctor to update
+            let doctor = new Doctor({firstName: 'test', lastName: 'doctor', phoneNumber: '454545'});
+            doctor._id = new mongoose.Types.ObjectId();
+            doctor.save((err, doctor) => {
+                if (err) return console.error(err);
+                chai.request(server)
+                .put('/doctors/' + doctor._id)
+                .send({firstName: 'update test'})
+                .end((err, res) => {
+                    if (err) return console.error(err);
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('msg');
+                    res.body.should.have.property('response');
+                    res.body.response.should.be.a('object');
+                });
+                done();
+            });
+        });
+    });
+
     
 });

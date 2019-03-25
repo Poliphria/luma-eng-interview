@@ -55,11 +55,9 @@ module.exports.deleteDoctor = (req, res, next) => {
 }
 
 module.exports.updateDoctor = (req, res, next) => {
-        Doctor.findByIdAndUpdate(req.params.id, req.body, {runValidators: true, new: true})
-        .then(result => {
-                console.log('updated')
-                console.log(result);
-                res.status(200).json(result);
+        Doctor.findOneAndUpdate({_id: req.params.id}, {$set: req.body}, {runValidators: true, new: true, useFindAndModify: false}).exec()
+        .then(response => {
+                res.send({msg: 'Doctor successfully updated', response});  
         })
         .catch(err => next(err));
 }
