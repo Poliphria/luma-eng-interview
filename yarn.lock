@@ -404,6 +404,11 @@ chai@^4.2.0:
     pathval "^1.1.0"
     type-detect "^4.0.5"
 
+chaid@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/chaid/-/chaid-1.0.2.tgz#f58e94360528abdaa46acf0b3a5174a06e157750"
+  integrity sha1-9Y6UNgUoq9qkas8LOlF0oG4Vd1A=
+
 chalk@^2.0.1, chalk@^2.4.1:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"

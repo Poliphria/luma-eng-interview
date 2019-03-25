@@ -2,28 +2,32 @@ const Doctor = require('../models/DoctorModel');
 const Appointment = require('../models/AppointmentsModel')
 const mongoose = require('mongoose');
 
-module.exports.createDoctor = (req, res) => {
+module.exports.createDoctor = (req, res, next) => {
         const newDoctor = new Doctor(req.body);
         newDoctor._id = new mongoose.Types.ObjectId();
 
         // make call to db to add doctor
         newDoctor.save((err, doc) => {
                 if (err) {
-                        return console.error(err);
+                        // return console.error(err);
+                        next(err);
                 } 
                 // console.log("New doctor saved", doc);
                 res.json(doc);
         })
 }
 
-module.exports.getAllDoctors = (req, res) => {
+module.exports.getAllDoctors = (req, res, next) => {
         Doctor.find({}, (err, docs) => {
-                if (err) return console.error(err);
+                if (err) {
+                        console.error(err);
+                        next(err);
+                }
                 res.json(docs);
         })
 }
 
-module.exports.findDoctorById = (req, res) => {
+module.exports.findDoctorById = (req, res, next) => {
         Doctor.findById(req.params.id)
         .then(doc => {
                 if (!doc) return res.status(404).end();
@@ -50,7 +54,7 @@ module.exports.deleteDoctor = (req, res, next) => {
                 .catch(err => next(err));
 }
 
-module.exports.updateDoctor = (req, res) => {
+module.exports.updateDoctor = (req, res, next) => {
         Doctor.findByIdAndUpdate(req.params.id, req.body, {runValidators: true, new: true})
         .then(result => {
                 console.log('updated')

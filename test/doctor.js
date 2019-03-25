@@ -12,8 +12,10 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../index');
 let should = chai.should();
+let chaid = require('chaid');
 
 chai.use(chaiHttp);
+chai.use(chaid);
 
 // Connect to the mock database
 before((done) => {
@@ -34,8 +36,8 @@ describe('Doctors', () => {
         mockgoose.helper.reset()
             .then(() => {
                 done();
-            })
-    })
+            });
+    });
 
     /**
      * Test the POST route
@@ -82,6 +84,83 @@ describe('Doctors', () => {
                 })
             done();
 
-        })
-    })
-})
+        });
+        it('it should not POST a doctor without a last name', (done) => {
+            let newDoctor = {
+                firstName: "Daniel",
+                phoneNumber: "45543",
+            }
+            chai.request(server)
+                .post('/doctors')
+                .send(newDoctor)
+                .end((err, res) => {
+                    if (err) return console.error(err);
+                    res.should.have.status(404);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('errors');
+                    res.body.errors.should.have.property('lastName');
+                    res.body.errors.lastName.should.have.property('kind').eql('required');
+                })
+            done();
+        });
+    });
+
+    /**
+     * Test the GET route for list of all doctors
+     */
+    describe('GET /doctors', () => {
+        it('it should GET all the doctors', (done) => {
+            chai.request(server)
+                .get('/doctors')
+                .end((err, res) => {
+                    if (err) return console.error(err);
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    res.body.length.should.be.eql(0);
+                });
+            done();
+        });
+    });
+
+    /**
+     * Test GET route for doctor with the provided id
+     */
+    describe('GET /doctors/:id', () => {
+        it('it should GET a doctor by the given id', (done) => {
+            let doctor = new Doctor({
+                firstName: "christian",
+                lastName: "moronta",
+                phoneNumber: "909090"
+            })
+            doctor._id = new mongoose.Types.ObjectId();
+            doctor.save((err, doctor) => {
+                if (err) return console.error(err);
+                chai.request(server)
+                    .get('/doctors/' + doctor._id)
+                    .end((err, res) => {
+                        if (err) return console.error(err);
+                        res.should.have.status(200);
+                        res.body.should.have.property('firstName');
+                        res.body.should.have.property('lastName');
+                        res.body.should.have.property('phoneNumber');
+                        res.body.should.have.property('_id');
+                        res.body.should.have.id(doctor._id);
+                    });
+                done();
+            })
+        });
+        it('it should not GET a doctor with a non existent resource id', (done) => {
+            let id = '424324fdsf';
+            chai.request(server)
+                .get('/doctors/' + id)
+                .end((err, res) => {
+                    if (err) return console.error(err);
+                    res.should.have.status(404);
+                    res.body.should.have.property('name').eql("CastError");
+                })
+            done();
+        });
+    });
+
+    
+});

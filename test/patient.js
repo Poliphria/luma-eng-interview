@@ -164,7 +164,7 @@ describe('Patients', () => {
                         res.body.should.be.a('object');
                         res.body.should.have.property('msg');
                         res.body.should.have.property('response');
-                        res.body.response.should.be.a('object');
+                        res.body.should.be.a('object');
                     });
                 done();
             });
